@@ -4,6 +4,7 @@
 pcapPath = "pcaps/ikev1-psk-aggressive-mode-simple.pcapng"
 dictPath = "dict/list-simple.txt"
 
+from hashlib import sha256
 from scapy.all import *
 import unittest
 import ikev1_pcapReader as pcapReader
@@ -94,7 +95,7 @@ class TestStringMethods(unittest.TestCase):
         respKEX = ikeParser.getPayloadFromISAKMP(respSAPacket,ikeParser.ISAKMP_KEX_NAME)
         respKEXHash  = sha256(respKEX).hexdigest()
         self.assertEqual(respKEXHash, TestStringMethods.respKEXHash)
-        
+
     def test_initNonceHash(self):
         netPackets = pcapReader.openPCAPFile(pcapPath)
         ikePackets = pcapReader.getISAKMPPackets(netPackets)
@@ -102,7 +103,7 @@ class TestStringMethods(unittest.TestCase):
         initNONCE = ikeParser.getPayloadFromISAKMP(initSAPacket,ikeParser.ISAKMP_NONCE_NAME)
         initNonceHash  = sha256(initNONCE).hexdigest()
         self.assertEqual(initNonceHash, TestStringMethods.initNonceHash)
-        
+
     def test_respNonceHash(self):
         netPackets = pcapReader.openPCAPFile(pcapPath)
         ikePackets = pcapReader.getISAKMPPackets(netPackets)
@@ -121,7 +122,7 @@ def bytesToHex(byteStr):
     raise NotImplementedError("You have to implement this function.")
 
 def computeKeyFromValues(values):
-    # TODO: This function computes the key k from nonces, and psk 
+    # TODO: This function computes the key k from nonces, and psk
     raise NotImplementedError("You have to implement this function.")
 
 def computeHashRFromValues(values):
@@ -136,5 +137,7 @@ if __name__ == '__main__':
     # 2. get required values
     # 3. read dict line by line
     # 4. compute key and hashe and compare to existing value
+    pcap = pcapReader.openPCAPFile('../pcaps/ikev1-psk-aggressive-mode-simple.pcapng')
+    isakmpPackets = pcapReader.getISAKMPPackets(pcap)
     raise NotImplementedError("You have to implement this function.")
     unittest.main()
